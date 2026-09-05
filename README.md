@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Recipe Journal
 
-## Getting Started
+A Next.js food blog with recipes authored in Markdown, styled with Tailwind CSS and shadcn/ui.
 
-First, run the development server:
+## What is built
+
+- Responsive homepage: hero first, then six latest recipes.
+- Recipe collection with ingredient/text search, category filters, and shareable URL state.
+- Category pages, Markdown About page, and useful 404 pages.
+- Recipe pages with ingredient checkboxes, numbered methods, jump links, and print layouts.
+- Validated content, draft exclusion, metadata, Recipe JSON-LD, sitemap, and crawler rules.
+
+The Recipe Journal is a working identity. Six sample recipes and illustrative photographs are included; recipes are not yet kitchen-tested. The site is implemented locally and has not been deployed.
+
+## Run locally
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Development server on port 3000 |
+| `npm run build` | Production build with content validation |
+| `npm start` | Serve an existing production build |
+| `npm run lint` | ESLint |
+| `npm run validate:content` | Validate recipes and About content without building the interface |
+| `npm test` | Content and search unit tests |
+| `npm run test:e2e` | Build and run desktop/mobile Chromium tests against a temporary production server on port 3001 |
 
-## Learn More
+Install the browser before running the end-to-end suite for the first time:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx playwright install chromium
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Port 3001 must be free for the browser suite. Its production server is stopped by Playwright when testing finishes. Screenshots and failure traces are written to the ignored `test-results/` directory.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Add a recipe
 
-## Deploy on Vercel
+Create `content/recipes/your-recipe.md` and add its photograph to `public/images/recipes/`. Follow the [recipe authoring guide](docs/recipe-content.md), then run `npm run validate:content`. A recipe with `draft: true` is excluded from every public collection and route. Publish with `draft: false` and rebuild/deploy.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Configure the site
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/config/site.ts`: name, author attribution, description, and sample-content label.
+- `src/config/categories.ts`: category names and descriptions.
+- `content/pages/about.md`: the About page.
+- `src/app/globals.css`: colours, typography, responsive layout, and print styles.
+
+`SITE_URL` sets the canonical origin used in metadata and sitemap URLs. It defaults to `http://localhost:3000` for development. Set it to your real domain in the deployment environment **before building**. Replace the working identity, sample recipes, and illustrative photography before public launch. Set `sampleContent` to false only after replacing/reviewing the collection.
+
+## Project documentation
+
+| Document | Contents |
+| --- | --- |
+| [Project overview](docs/project-overview.md) | Scope, design direction, and remaining launch decisions |
+| [Site map](docs/site-map.md) | Routes, navigation, page contents, and reader journeys |
+| [Architecture](docs/architecture.md) | File structure, content flow, and server/client boundaries |
+| [Recipe authoring](docs/recipe-content.md) | Complete Markdown example and publishing workflow |
+| [Implementation plan](docs/implementation-plan.md) | Progress and acceptance checks |
+
+Foundation: Next.js 16.3.4, React 19.2.8, TypeScript, Tailwind CSS 4, and shadcn/ui with Radix primitives. Content uses gray-matter, Zod, unified/remark, and react-markdown. No database or external content service is required. `package-lock.json` records installed versions.
