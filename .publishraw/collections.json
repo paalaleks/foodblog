@@ -132,7 +132,7 @@
       ],
       "capabilities": {
         "loader": "src/lib/content/recipes.ts",
-        "renderer": "src/app/recipes/[slug]/page.tsx",
+        "renderer": "src/components/recipes/recipe-body.tsx",
         "markdown": "commonmark-no-html",
         "evidence": ".publishraw/recipes-evidence.json"
       },
