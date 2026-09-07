@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "collections": [
+    {
+      "id": "recipes",
+      "kind": "repeatable",
+      "description": "Markdown recipes with introductory text, ingredients, an ordered cooking method, and optional notes.",
+      "directory": "content/recipes",
+      "filename": "{slug}.md",
+      "route": "/recipes/{slug}",
+      "fields": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Recipe display name."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": true,
+          "description": "Summary used on recipe cards and in page metadata."
+        },
+        {
+          "name": "date",
+          "type": "date",
+          "required": true,
+          "description": "Publication date in YYYY-MM-DD format."
+        },
+        {
+          "name": "updated",
+          "type": "date",
+          "required": false,
+          "description": "Optional last-updated date on or after the publication date."
+        },
+        {
+          "name": "category",
+          "type": "string",
+          "required": true,
+          "description": "Existing recipe category slug."
+        },
+        {
+          "name": "tags",
+          "type": "strings",
+          "required": false,
+          "description": "Optional descriptive tags used by recipe search."
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "required": true,
+          "description": "Existing local recipe image path under /images/recipes/."
+        },
+        {
+          "name": "imageAlt",
+          "type": "string",
+          "required": true,
+          "description": "Text alternative describing the recipe image."
+        },
+        {
+          "name": "prepMinutes",
+          "type": "number",
+          "required": true,
+          "description": "Nonnegative whole preparation time in minutes."
+        },
+        {
+          "name": "cookMinutes",
+          "type": "number",
+          "required": true,
+          "description": "Nonnegative whole cooking time in minutes."
+        },
+        {
+          "name": "restMinutes",
+          "type": "number",
+          "required": false,
+          "description": "Optional nonnegative whole resting time in minutes; defaults to zero."
+        },
+        {
+          "name": "servings",
+          "type": "number",
+          "required": true,
+          "description": "Positive whole-number yield."
+        },
+        {
+          "name": "featured",
+          "type": "boolean",
+          "required": false,
+          "description": "Optional homepage feature flag; defaults to false."
+        },
+        {
+          "name": "draft",
+          "type": "boolean",
+          "required": true,
+          "description": "Publication control; drafts are excluded from public routes and collections."
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Ingredients",
+          "required": true,
+          "content": "list",
+          "images": false
+        },
+        {
+          "heading": "Method",
+          "required": true,
+          "content": "ordered-list",
+          "images": false
+        },
+        {
+          "heading": "Notes",
+          "required": false,
+          "content": "flexible",
+          "images": false
+        }
+      ],
+      "introduction": true,
+      "introductionImages": false,
+      "additionalSections": false,
+      "classification": {
+        "field": "category",
+        "values": [
+          "breakfast",
+          "mains",
+          "sides",
+          "desserts"
+        ],
+        "description": "Required category slugs defined by the existing site configuration."
+      },
+      "imageFields": [
+        "image"
+      ],
+      "capabilities": {
+        "loader": "src/lib/content/recipes.ts",
+        "renderer": "src/app/recipes/[slug]/page.tsx",
+        "markdown": "commonmark-no-html",
+        "evidence": ".publishraw/recipes-evidence.json"
+      },
+      "deployment": {
+        "productionOrigin": "https://foodblog-pi.vercel.app",
+        "signals": "GitHub production deployment 6311417620 succeeded for baseline revision b9a87c91e33b07c2b0a33ba6a0527c9f5201b670; the repository homepage points to the same Vercel production origin.",
+        "publicUrlEvidence": "https://foodblog-pi.vercel.app/recipes/mushroom-sage-pasta returned HTTP 200 with the expected recipe title on 2026-09-07; public publication verification remains pending."
+      }
+    }
+  ]
+}
