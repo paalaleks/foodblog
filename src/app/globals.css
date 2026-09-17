@@ -663,6 +663,9 @@
   justify-content: center;
   gap: 12px;
 }
+.recipe-hero {
+  margin: 0;
+}
 .recipe-hero-image {
   position: relative;
   height: 510px;
@@ -671,6 +674,12 @@
 }
 .recipe-hero-image img {
   object-fit: cover;
+}
+.recipe-image-attribution {
+  margin-top: 10px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  text-align: right;
 }
 .recipe-story {
   max-width: 730px;

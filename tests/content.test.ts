@@ -47,6 +47,22 @@ test("plain Markdown formatting and multi-paragraph steps survive extraction", (
   assert.match(body.notes, /\*fresh\*/);
 });
 
+test("publication media retains its supplied image attribution", async () => {
+  const recipe = await parseRecipe(
+    changed({
+      image: "https://foodblog-pi.vercel.app/publication-media/example.png",
+      imageAttribution: "Photo supplied by the recipe author.",
+    }),
+    "published-recipe.md",
+  );
+
+  assert.equal(recipe.imageAttribution, "Photo supplied by the recipe author.");
+  assert.equal(
+    recipe.image,
+    "https://foodblog-pi.vercel.app/publication-media/example.png",
+  );
+});
+
 for (const [label, fields] of [
   ["missing title", { title: "" }],
   ["impossible calendar date", { date: "2026-02-30" }],

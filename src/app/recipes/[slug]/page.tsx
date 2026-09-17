@@ -125,15 +125,22 @@ export default async function RecipePage({ params }: Props) {
             {absoluteUrl(`/recipes/${recipe.slug}`)}
           </p>
         </header>
-        <div className="recipe-hero-image no-print">
-          <Image
-            src={recipe.image}
-            alt={recipe.imageAlt}
-            fill
-            preload
-            sizes="(max-width: 1200px) 100vw, 1200px"
-          />
-        </div>
+        <figure className="recipe-hero no-print">
+          <div className="recipe-hero-image">
+            <Image
+              src={recipe.image}
+              alt={recipe.imageAlt}
+              fill
+              preload
+              sizes="(max-width: 1200px) 100vw, 1200px"
+            />
+          </div>
+          {recipe.imageAttribution ? (
+            <figcaption className="recipe-image-attribution">
+              {recipe.imageAttribution}
+            </figcaption>
+          ) : null}
+        </figure>
         <RecipeBody recipe={recipe} />
         {site.sampleContent && (
           <p className="sample-note">

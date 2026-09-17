@@ -21,6 +21,7 @@ category: "mains"
 tags: ["pasta", "quick", "weeknight"]
 image: "/images/recipes/lemon-basil-pasta.jpg"
 imageAlt: "Pasta with basil leaves, lemon zest, and grated Parmesan in a shallow bowl"
+imageAttribution: "Photo supplied by the recipe author."
 prepMinutes: 10
 cookMinutes: 15
 servings: 2
@@ -65,8 +66,9 @@ Add the remaining lemon juice a little at a time if you prefer a sharper sauce.
 | `updated` | No | Quoted date on or after publication date |
 | `category` | Yes | Slug defined in `src/config/categories.ts` |
 | `tags` | No | Nonempty descriptive strings; defaults to an empty list |
-| `image` | Yes | Path to an existing local recipe image |
+| `image` | Yes | Path to an existing local recipe image, or an approved HTTPS URL under `/publication-media/` |
 | `imageAlt` | Yes | Description of the actual image |
+| `imageAttribution` | No | Visible credit for the supplied image |
 | `prepMinutes` | Yes | Integer, zero or greater |
 | `cookMinutes` | Yes | Integer, zero or greater |
 | `restMinutes` | No | Integer, zero or greater; default zero; includes chilling/rising |

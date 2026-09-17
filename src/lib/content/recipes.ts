@@ -39,12 +39,14 @@ export async function parseRecipe(
       throw new Error(
         "Published date cannot be in the future; use draft: true",
       );
-    const imagePath = path.join(publicDirectory, metadata.image.slice(1));
-    const imageStat = await fs.lstat(imagePath).catch(() => null);
-    if (!imageStat?.isFile() || imageStat.isSymbolicLink())
-      throw new Error(
-        `Image does not exist as a local file: ${metadata.image}`,
-      );
+    if (metadata.image.startsWith("/")) {
+      const imagePath = path.join(publicDirectory, metadata.image.slice(1));
+      const imageStat = await fs.lstat(imagePath).catch(() => null);
+      if (!imageStat?.isFile() || imageStat.isSymbolicLink())
+        throw new Error(
+          `Image does not exist as a local file: ${metadata.image}`,
+        );
+    }
     return {
       ...metadata,
       ...parseRecipeBody(content),
