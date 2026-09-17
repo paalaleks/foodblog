@@ -11,6 +11,11 @@ export function RecipeCard({
   recipe: RecipeSummary;
   eager?: boolean;
 }) {
+  const category = recipe.category
+    ? getCategory(recipe.category)
+    : undefined;
+  const hasMeta = category || recipe.totalMinutes !== undefined;
+
   return (
     <article className="recipe-card" data-testid="recipe-card">
       <Link
@@ -30,15 +35,21 @@ export function RecipeCard({
           <ArrowUpRight />
         </span>
       </Link>
-      <div className="recipe-card-meta">
-        <Link href={`/recipes/category/${recipe.category}`}>
-          {getCategory(recipe.category)?.name}
-        </Link>
-        <span>
-          <Clock3 aria-hidden="true" />
-          {recipe.totalMinutes} min
-        </span>
-      </div>
+      {hasMeta ? (
+        <div className="recipe-card-meta">
+          {category ? (
+            <Link href={`/recipes/category/${category.slug}`}>
+              {category.name}
+            </Link>
+          ) : null}
+          {recipe.totalMinutes === undefined ? null : (
+            <span>
+              <Clock3 aria-hidden="true" />
+              {recipe.totalMinutes} min
+            </span>
+          )}
+        </div>
+      ) : null}
       <h3>
         <Link href={`/recipes/${recipe.slug}`}>{recipe.title}</Link>
       </h3>

@@ -22,26 +22,29 @@ const publicationImage = z.url().refine((value) => {
 
 export const recipeSchema = z
   .strictObject({
-    title: text,
+    title: text.optional(),
     description: text,
-    date,
+    date: date.optional(),
     updated: date.optional(),
-    category: z.enum(categories.map((category) => category.slug)),
+    category: z.enum(categories.map((category) => category.slug)).optional(),
     tags: z.array(text).default([]),
     image: z.union([localRecipeImage, publicationImage]),
-    imageAlt: text,
+    imageAlt: text.optional(),
     imageAttribution: text.optional(),
-    prepMinutes: minutes,
-    cookMinutes: minutes,
+    prepMinutes: minutes.optional(),
+    cookMinutes: minutes.optional(),
     restMinutes: minutes.default(0),
-    servings: z.number().int().positive(),
+    servings: z.number().int().positive().optional(),
     featured: z.boolean().default(false),
-    draft: z.boolean(),
+    draft: z.boolean().default(false),
   })
-  .refine((recipe) => !recipe.updated || recipe.updated >= recipe.date, {
+  .refine(
+    (recipe) => !recipe.updated || !recipe.date || recipe.updated >= recipe.date,
+    {
     message: "updated must be on or after date",
     path: ["updated"],
-  });
+    },
+  );
 
 export const pageSchema = z.strictObject({ title: text, description: text });
 export type RecipeMetadata = z.infer<typeof recipeSchema>;

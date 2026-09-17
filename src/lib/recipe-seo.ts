@@ -10,13 +10,25 @@ export function recipeStructuredData(recipe: Recipe) {
     description: recipe.description,
     image: [absoluteUrl(recipe.image)],
     author: { "@type": "Organization", name: site.author },
-    datePublished: recipe.date,
-    dateModified: recipe.updated || recipe.date,
-    prepTime: `PT${recipe.prepMinutes}M`,
-    cookTime: `PT${recipe.cookMinutes}M`,
-    totalTime: `PT${recipe.totalMinutes}M`,
-    recipeYield: `${recipe.servings} servings`,
-    recipeCategory: getCategory(recipe.category)?.name,
+    ...(recipe.date ? { datePublished: recipe.date } : {}),
+    ...(recipe.updated || recipe.date
+      ? { dateModified: recipe.updated || recipe.date }
+      : {}),
+    ...(recipe.prepMinutes === undefined
+      ? {}
+      : { prepTime: `PT${recipe.prepMinutes}M` }),
+    ...(recipe.cookMinutes === undefined
+      ? {}
+      : { cookTime: `PT${recipe.cookMinutes}M` }),
+    ...(recipe.totalMinutes === undefined
+      ? {}
+      : { totalTime: `PT${recipe.totalMinutes}M` }),
+    ...(recipe.servings === undefined
+      ? {}
+      : { recipeYield: `${recipe.servings} servings` }),
+    ...(recipe.category
+      ? { recipeCategory: getCategory(recipe.category)?.name }
+      : {}),
     keywords: recipe.tags.join(", "),
     recipeIngredient: recipe.ingredients,
     recipeInstructions: recipe.steps.map((step, index) => ({

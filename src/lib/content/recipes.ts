@@ -6,8 +6,13 @@ import { cache } from "react";
 import { recipeSchema, type RecipeMetadata } from "./schema";
 import { parseRecipeBody } from "./markdown";
 
-export type Recipe = RecipeMetadata &
-  ReturnType<typeof parseRecipeBody> & { slug: string; totalMinutes: number };
+export type Recipe = Omit<RecipeMetadata, "title" | "imageAlt"> &
+  ReturnType<typeof parseRecipeBody> & {
+    slug: string;
+    title: string;
+    imageAlt: string;
+    totalMinutes?: number;
+  };
 export type RecipeSummary = Pick<
   Recipe,
   | "slug"
@@ -35,7 +40,7 @@ export async function parseRecipe(
       );
     const { data, content } = matter(source);
     const metadata = recipeSchema.parse(data);
-    if (!metadata.draft && metadata.date > today)
+    if (!metadata.draft && metadata.date && metadata.date > today)
       throw new Error(
         "Published date cannot be in the future; use draft: true",
       );
@@ -47,12 +52,20 @@ export async function parseRecipe(
           `Image does not exist as a local file: ${metadata.image}`,
         );
     }
+    const slug = filename.slice(0, -3);
+    const totalMinutes =
+      metadata.prepMinutes !== undefined && metadata.cookMinutes !== undefined
+        ? metadata.prepMinutes + metadata.cookMinutes + metadata.restMinutes
+        : undefined;
     return {
       ...metadata,
       ...parseRecipeBody(content),
-      slug: filename.slice(0, -3),
-      totalMinutes:
-        metadata.prepMinutes + metadata.cookMinutes + metadata.restMinutes,
+      slug,
+      title:
+        metadata.title ??
+        `${slug.charAt(0).toUpperCase()}${slug.slice(1).replaceAll("-", " ")}`,
+      imageAlt: metadata.imageAlt ?? metadata.description,
+      ...(totalMinutes === undefined ? {} : { totalMinutes }),
     };
   } catch (error) {
     throw new Error(
@@ -78,7 +91,9 @@ export async function loadRecipes(
     ),
   );
   return recipes.sort(
-    (a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug),
+    (a, b) =>
+      (b.date ?? "").localeCompare(a.date ?? "") ||
+      a.slug.localeCompare(b.slug),
   );
 }
 

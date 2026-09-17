@@ -71,10 +71,12 @@ export default async function Home() {
                 <div>
                   <span className="eyebrow">ON THE TABLE TODAY</span>
                   <h2>{featured.title}</h2>
-                  <span className="caption-time">
-                    <Clock3 aria-hidden="true" />
-                    {featured.totalMinutes} minutes · A weeknight favourite
-                  </span>
+                  {featured.totalMinutes === undefined ? null : (
+                    <span className="caption-time">
+                      <Clock3 aria-hidden="true" />
+                      {featured.totalMinutes} minutes
+                    </span>
+                  )}
                 </div>
                 <span className="caption-arrow">
                   <ArrowUpRight aria-hidden="true" />

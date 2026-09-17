@@ -24,6 +24,11 @@ test("all recipes validate and derive total times and structured data from Markd
   const recipes = await loadRecipes();
   assert.ok(recipes.length >= 6);
   for (const recipe of recipes) {
+    assert.notEqual(recipe.prepMinutes, undefined);
+    assert.notEqual(recipe.cookMinutes, undefined);
+    if (recipe.prepMinutes === undefined || recipe.cookMinutes === undefined) {
+      throw new Error("Sample recipes include preparation and cooking times.");
+    }
     assert.equal(
       recipe.totalMinutes,
       recipe.prepMinutes + recipe.cookMinutes + recipe.restMinutes,
@@ -63,8 +68,41 @@ test("publication media retains its supplied image attribution", async () => {
   );
 });
 
+test("description and image are the only required recipe frontmatter", async () => {
+  const recipe = await parseRecipe(
+    matter.stringify(content, {
+      description: "A flexible supper assembled from the supplied recipe.",
+      image: data.image,
+    }),
+    "flexible-supper.md",
+  );
+
+  assert.equal(recipe.title, "Flexible supper");
+  assert.equal(recipe.imageAlt, recipe.description);
+  assert.equal(recipe.date, undefined);
+  assert.equal(recipe.category, undefined);
+  assert.equal(recipe.prepMinutes, undefined);
+  assert.equal(recipe.cookMinutes, undefined);
+  assert.equal(recipe.totalMinutes, undefined);
+  assert.equal(recipe.servings, undefined);
+  assert.equal(recipe.draft, false);
+
+  const json = recipeStructuredData(recipe);
+  for (const field of [
+    "datePublished",
+    "dateModified",
+    "prepTime",
+    "cookTime",
+    "totalTime",
+    "recipeYield",
+    "recipeCategory",
+  ]) {
+    assert.equal(Object.hasOwn(json, field), false, field);
+  }
+});
+
 for (const [label, fields] of [
-  ["missing title", { title: "" }],
+  ["blank title", { title: "" }],
   ["impossible calendar date", { date: "2026-02-30" }],
   ["unknown category", { category: "unknown" }],
   ["negative time", { cookMinutes: -2 }],

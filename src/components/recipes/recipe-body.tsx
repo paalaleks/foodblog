@@ -27,7 +27,9 @@ export function RecipeBody({ recipe }: { recipe: Recipe }) {
           <aside className="ingredients-panel">
             <div className="ingredients-heading">
               <h3>Ingredients</h3>
-              <span>Serves {recipe.servings}</span>
+              {recipe.servings === undefined ? null : (
+                <span>Serves {recipe.servings}</span>
+              )}
             </div>
             <p className="check-hint no-print">Tick them off as you go.</p>
             <IngredientChecklist

@@ -26,6 +26,8 @@ export function filterRecipes(
       );
     })
     .sort(
-      (a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug),
+      (a, b) =>
+        (b.date ?? "").localeCompare(a.date ?? "") ||
+        a.slug.localeCompare(b.slug),
     );
 }

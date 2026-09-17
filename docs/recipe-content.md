@@ -60,23 +60,23 @@ Add the remaining lemon juice a little at a time if you prefer a sharper sauce.
 
 | Field | Required | Rule |
 | --- | --- | --- |
-| `title` | Yes | Nonempty display title |
+| `title` | No | Nonempty display title; defaults to the filename slug as readable text |
 | `description` | Yes | Nonempty summary for cards and metadata |
-| `date` | Yes | Quoted calendar date in `YYYY-MM-DD` format |
+| `date` | No | Quoted calendar date in `YYYY-MM-DD` format |
 | `updated` | No | Quoted date on or after publication date |
-| `category` | Yes | Slug defined in `src/config/categories.ts` |
+| `category` | No | Slug defined in `src/config/categories.ts` |
 | `tags` | No | Nonempty descriptive strings; defaults to an empty list |
 | `image` | Yes | Path to an existing local recipe image, or an approved HTTPS URL under `/publication-media/` |
-| `imageAlt` | Yes | Description of the actual image |
+| `imageAlt` | No | Description of the actual image; defaults to `description` |
 | `imageAttribution` | No | Visible credit for the supplied image |
-| `prepMinutes` | Yes | Integer, zero or greater |
-| `cookMinutes` | Yes | Integer, zero or greater |
+| `prepMinutes` | No | Integer, zero or greater |
+| `cookMinutes` | No | Integer, zero or greater |
 | `restMinutes` | No | Integer, zero or greater; default zero; includes chilling/rising |
-| `servings` | Yes | Positive integer |
+| `servings` | No | Positive integer |
 | `featured` | No | Boolean, default false |
-| `draft` | Yes | Boolean; true until ready to publish |
+| `draft` | No | Boolean, default false; set true to exclude the recipe from public routes |
 
-Derive total time from preparation, cooking, and resting time. The author comes from shared site configuration in this single-author version.
+The renderer derives total time only when both preparation and cooking time are present. Components and structured data omit missing category, date, timing, and serving facts. The author comes from shared site configuration in this single-author version.
 
 Publication is controlled by `draft`. Future dates are not a scheduling mechanism; reject a future-dated published recipe during the build using UTC calendar dates consistently. If multiple published recipes are featured, choose the newest; if none are featured, use the newest published recipe.
 
@@ -98,7 +98,7 @@ The renderer and structured-data generator use these same sections. Extract sect
 
 ## Publishing workflow
 
-1. Create the Markdown file with `draft: true`.
+1. Create the Markdown file. Set `draft: true` while the recipe must remain outside public routes.
 2. Add its photograph and image description. Record image source and permitted usage in an adjacent `.credits.md` file when appropriate.
 3. Write the introduction, measured ingredients, complete method, and notes.
 4. Run `npm run validate:content`, then `npm run dev`. Drafts remain excluded from public routes. To preview a draft's full page, temporarily set `draft: false` in a local working copy, then restore it before sharing unfinished work.

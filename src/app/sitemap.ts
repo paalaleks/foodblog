@@ -16,7 +16,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       })),
     ...recipes.map((recipe) => ({
       url: absoluteUrl(`/recipes/${recipe.slug}`),
-      lastModified: recipe.updated || recipe.date,
+      ...(recipe.updated || recipe.date
+        ? { lastModified: recipe.updated || recipe.date }
+        : {}),
     })),
   ];
 }
